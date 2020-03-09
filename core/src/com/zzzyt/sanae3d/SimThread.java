@@ -14,13 +14,15 @@ public class SimThread extends Thread {
 	public boolean sort;
 	
 	public SimThread() {
-		this.id=0;
 		this.sanae=Sanae3d.sanae;
+		this.id=sanae.workers.size();
+		setName("Physics Thread "+id);
 	}
 	
 	public SimThread(int id) {
 		this.id=id;
 		this.sanae=Sanae3d.sanae;
+		setName("Physics Thread "+id);
 	}
 	
 	public void run() {
@@ -32,6 +34,7 @@ public class SimThread extends Thread {
 				if(sort) {
 					int cnt=Math.min((sanae.entities.size()-id)/sanae.workers.size(), SanaeConfig.sortSize);
 					for(int i=0;i<cnt;i++) {
+						if(sanae.entities.get(lastsorted).isTiny())continue;
 						sanae.entities.get(lastsorted).getComputedList().sort();
 						lastsorted+=sanae.workers.size();
 						if(lastsorted>=sanae.entities.size()) {

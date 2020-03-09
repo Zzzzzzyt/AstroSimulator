@@ -1,6 +1,7 @@
 package com.zzzyt.sanae3d.entity;
 
 import com.zzzyt.sanae3d.Sanae3d;
+import com.zzzyt.sanae3d.SanaeConfig;
 import com.zzzyt.sanae3d.math.Vec3;
 
 public class PointMass implements Entity {
@@ -12,6 +13,10 @@ public class PointMass implements Entity {
 	public Vec3 v;
 	public Vec3 a;
 	public ComputeList list;
+	
+	public boolean isTiny() {
+		return mass<SanaeConfig.tinyMass;
+	}
 	
 	public PointMass(double mass,Vec3 pos) {
 		super();

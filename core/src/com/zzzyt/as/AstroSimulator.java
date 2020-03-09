@@ -41,12 +41,14 @@ public class AstroSimulator extends ApplicationAdapter {
 	
 	public double speed=1;
 
+	private int flag=0;
+	
 	@Override
 	public void create() {
 		instances = new ArrayList<ModelInstance>();
 		trace = new ArrayList<ArrayList<Vector3>>();
 		shape = new ShapeRenderer();
-		sanae = new Sanae3d(16);
+		sanae = new Sanae3d(4);
 		env = new Environment();
 		env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
@@ -55,7 +57,7 @@ public class AstroSimulator extends ApplicationAdapter {
 		controller=new CameraInputController(cam);
 		input.addProcessor(controller);
 		Gdx.input.setInputProcessor(input);
-		cam.position.set(300f, 300f, 300f);
+		cam.position.set(100f, 100f, 100f);
 		cam.lookAt(0, 0, 0);
 		cam.near = 1f;
 		cam.far = 1000f;
@@ -63,14 +65,14 @@ public class AstroSimulator extends ApplicationAdapter {
 		controller.translateUnits=10;
 		
 		ModelBuilder modelBuilder = new ModelBuilder();
-		int count = 10;
-		sanae.addEntity(new PointMass(1e17, Vec3.ZERO.clone()));
+		int count = 2000;
+		sanae.addEntity(new PointMass(1e20, Vec3.ZERO.clone()));
 		instances.add(new ModelInstance(modelBuilder.createSphere(10f, 10f, 10f, 20, 20,
 				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
 				Usage.Position | Usage.Normal)));
 		trace.add(new ArrayList<Vector3>());
 		for (int i = 0; i < count; i++) {
-			sanae.addEntity(new PointMass(1,
+			sanae.addEntity(new PointMass(1e5,
 					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100),
 					new Vec3(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)));
 			instances.add(new ModelInstance(modelBuilder.createSphere(1f, 1f, 1f, 20, 20,
@@ -83,9 +85,13 @@ public class AstroSimulator extends ApplicationAdapter {
 	@Override
 	public void render() {
 		handler.handle();
+		if(flag>100) {
+			sanae.sim((double) Gdx.graphics.getDeltaTime()*speed);
+		}
+		else {
+			flag++;
+		}
 		
-		sanae.sim((double) Gdx.graphics.getDeltaTime()*speed);
-
 		controller.update();
 		cam.update();
 		shape.setProjectionMatrix(cam.combined);

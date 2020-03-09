@@ -15,4 +15,5 @@ public interface Entity {
 	public ComputeList getComputedList();
 	public double dst(Entity e);
 	public double dst2(Entity e);
+	public boolean isTiny();
 }

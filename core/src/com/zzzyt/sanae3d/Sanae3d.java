@@ -3,6 +3,7 @@ package com.zzzyt.sanae3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.zzzyt.sanae3d.entity.Entity;
 
@@ -27,7 +28,7 @@ public class Sanae3d {
 	
 	public void addEntity(Entity e) {
 		for(Entity i:entities) {
-			i.getComputedList().add(e);
+			if(!i.isTiny())i.getComputedList().add(e);
 		}
 		entities.add(e);
 	}
@@ -35,13 +36,12 @@ public class Sanae3d {
 	public void removeEntity(Entity e) {
 		entities.remove(e);
 		for(Entity i:entities) {
-			i.getComputedList().remove(e);
+			if(!i.isTiny())i.getComputedList().remove(e);
 		}
 	}
 	
 	public SimThread addWorker() {
-		SimThread s=new SimThread(workers.size());
-		s.setName("Physics Thread "+s.id);
+		SimThread s=new SimThread();
 		workers.add(s);
 		s.start();
 		return s;
@@ -50,7 +50,7 @@ public class Sanae3d {
 	public Sanae3d(){
 		sanae=this;
 		this.entities=new Vector<Entity>();
-		this.workers=new ArrayList<SimThread>();
+		this.workers=new CopyOnWriteArrayList<SimThread>();
 	}
 	
 	public Sanae3d(int cnt) {
