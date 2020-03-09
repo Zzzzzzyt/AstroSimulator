@@ -8,15 +8,6 @@ hs_err_pid*
 ## Robovm
 /ios/robovm-build/
 
-## GWT
-/html/war/
-/html/gwt-unitCache/
-.apt_generated/
-.gwt/
-gwt-unitCache/
-www-test/
-.gwt-tmp/
-
 ## Android Studio and Intellij and Android in general
 /android/libs/armeabi/
 /android/libs/armeabi-v7a/
@@ -39,7 +30,6 @@ com_crashlytics_export_strings.xml
 /android/bin/
 /core/bin/
 /desktop/bin/
-/html/bin/
 /ios/bin/
 /ios-moe/bin/
 *.tmp
@@ -57,7 +47,6 @@ com_crashlytics_export_strings.xml
 /android/nbproject/private/
 /core/nbproject/private/
 /desktop/nbproject/private/
-/html/nbproject/private/
 /ios/nbproject/private/
 /ios-moe/nbproject/private/
 
@@ -65,7 +54,6 @@ com_crashlytics_export_strings.xml
 /android/build/
 /core/build/
 /desktop/build/
-/html/build/
 /ios/build/
 /ios-moe/build/
 
@@ -73,7 +61,6 @@ com_crashlytics_export_strings.xml
 /android/nbbuild/
 /core/nbbuild/
 /desktop/nbbuild/
-/html/nbbuild/
 /ios/nbbuild/
 /ios-moe/nbbuild/
 
@@ -81,7 +68,6 @@ com_crashlytics_export_strings.xml
 /android/dist/
 /core/dist/
 /desktop/dist/
-/html/dist/
 /ios/dist/
 /ios-moe/dist/
 
@@ -89,7 +75,6 @@ com_crashlytics_export_strings.xml
 /android/nbdist/
 /core/nbdist/
 /desktop/nbdist/
-/html/nbdist/
 /ios/nbdist/
 /ios-moe/nbdist/
 
@@ -105,7 +90,6 @@ gradle-app.setting
 /android/build/
 /core/build/
 /desktop/build/
-/html/build/
 /ios/build/
 /ios-moe/build/
 

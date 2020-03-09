@@ -3,6 +3,11 @@ package com.zzzyt.sanae3d.math;
 import com.badlogic.gdx.math.Vector3;
 
 public class Vec3 {
+	public static final Vec3 ZERO=new Vec3(0,0,0);
+	public static final Vec3 X=new Vec3(1,0,0);
+	public static final Vec3 Y=new Vec3(0,1,0);
+	public static final Vec3 Z=new Vec3(0,0,1);
+	
 	public double x,y,z;
 	
 	public double getX() {
@@ -14,6 +19,30 @@ public class Vec3 {
 	
 	public double getZ() {
 		return z;
+	}
+	
+	public void setX(double x) {
+		this.x = x;
+	}
+	
+	public void setY(double y) {
+		this.y = y;
+	}
+	
+	public void setZ(double z) {
+		this.z = z;
+	}
+	
+	public void setZero() {
+		this.x=0;
+		this.y=0;
+		this.z=0;
+	}
+	
+	public void set(Vec3 v) {
+		this.x=v.x;
+		this.y=v.y;
+		this.z=v.z;
 	}
 	
 	@Override
