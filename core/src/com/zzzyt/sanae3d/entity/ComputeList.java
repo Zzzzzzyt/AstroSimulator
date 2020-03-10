@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import com.zzzyt.sanae3d.Sanae3d;
+
 public class ComputeList implements Iterable<Entity>, List<Entity> {
 
 	Entity me;
@@ -18,13 +20,15 @@ public class ComputeList implements Iterable<Entity>, List<Entity> {
 		this.list=new Vector<Entity>(256);
 	}
 	
-	public void sort() {
+	public void sort(long t) {
+		final double tmp[]=new double[Sanae3d.sanae.size()+10];
+		for(Entity e:list) {
+			tmp[e.getId()]=e.getMass()/me.dst2(t,e);
+		}
 		Collections.sort(list, new Comparator<Entity>() {
 			@Override
 			public int compare(Entity a, Entity b) {
-				double fa=a.getMass()/me.dst2(a);
-				double fb=b.getMass()/me.dst2(b);
-				return Double.compare(fb, fa);
+				return Double.compare(tmp[b.getId()],tmp[a.getId()]);
 			}
 		});
 	}

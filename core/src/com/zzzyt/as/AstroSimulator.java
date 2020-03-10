@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.zzzyt.as.input.Handler;
 import com.zzzyt.as.util.StyleUtil;
 import com.zzzyt.sanae3d.Sanae3d;
+import com.zzzyt.sanae3d.entity.Entity;
 import com.zzzyt.sanae3d.entity.PointMass;
 import com.zzzyt.sanae3d.math.Vec3;
 
@@ -43,54 +45,87 @@ public class AstroSimulator extends ApplicationAdapter {
 
 	private int flag=0;
 	
+	private long last1=0,last2=0;
+	
 	@Override
 	public void create() {
 		instances = new ArrayList<ModelInstance>();
 		trace = new ArrayList<ArrayList<Vector3>>();
 		shape = new ShapeRenderer();
-		sanae = new Sanae3d(4);
+		sanae = new Sanae3d(8);
 		env = new Environment();
 		env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 		batch = new ModelBatch();
-		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new PerspectiveCamera(70, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		controller=new CameraInputController(cam);
 		input.addProcessor(controller);
 		Gdx.input.setInputProcessor(input);
-		cam.position.set(100f, 100f, 100f);
+		cam.position.set(500f, 500f, 500f);
 		cam.lookAt(0, 0, 0);
 		cam.near = 1f;
-		cam.far = 1000f;
+		cam.far = 5000f;
 		cam.update();
 		controller.translateUnits=10;
 		
 		ModelBuilder modelBuilder = new ModelBuilder();
-		int count = 2000;
-		sanae.addEntity(new PointMass(1e20, Vec3.ZERO.clone()));
-		instances.add(new ModelInstance(modelBuilder.createSphere(10f, 10f, 10f, 20, 20,
-				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
-				Usage.Position | Usage.Normal)));
-		trace.add(new ArrayList<Vector3>());
+		int count = 2;
+//		sanae.add(new PointMass(1e12,Vec3.ZERO.clone(),new Vec3(0,0,0)));
+//		instances.add(new ModelInstance(modelBuilder.createSphere(2f, 2f, 2f, 20, 20,
+//				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
+//				Usage.Position | Usage.Normal)));
+		Model tmp=modelBuilder.createSphere(5f, 5f, 5f, 5, 5,
+				new Material(ColorAttribute.createDiffuse(Color.WHITE)),Usage.Position | Usage.Normal);
+//		trace.add(new ArrayList<Vector3>());
+		Vec3 tv=new Vec3(0,0,0);
 		for (int i = 0; i < count; i++) {
-			sanae.addEntity(new PointMass(1e5,
-					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100),
-					new Vec3(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)));
-			instances.add(new ModelInstance(modelBuilder.createSphere(1f, 1f, 1f, 20, 20,
-					new Material(ColorAttribute.createDiffuse(StyleUtil.colorize((float) i / count))),
-					Usage.Position | Usage.Normal)));
+			sanae.add(new PointMass(1e15,
+					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.5),
+					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.5)));
+			if(i!=count-1)tv.a(sanae.get(i).getVelocity(0).mul(sanae.get(i).getMass()));
+			instances.add(new ModelInstance(tmp));
 			trace.add(new ArrayList<Vector3>());
+		}
+		sanae.get(count-1).setVelocity(tv.mul(-1).div(sanae.get(count-1).getMass()));
+		int count2=5000;
+		for (int i = 0; i < count2; i++) {
+			sanae.add(new PointMass(1e5,
+					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.1),
+					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.1)));
+			instances.add(new ModelInstance(tmp));
 		}
 	}
 
 	@Override
 	public void render() {
 		handler.handle();
-		if(flag>100) {
-			sanae.sim((double) Gdx.graphics.getDeltaTime()*speed);
+		if(flag>10) {
+//			System.out.println("Sent signal.");
+//			System.out.println("counter1="+sanae.counter1);
+//			System.out.println("counter2="+sanae.counter2);
+//			System.out.println(sanae.get(0).getPos());
+//			System.out.println("delta1="+(sanae.counter1-last1));
+//			System.out.println("delta2="+(sanae.counter2-last2));
+//			System.out.println("speed="+speed);
+//			System.out.println("time="+Gdx.graphics.getDeltaTime());
+//			System.out.println();
+			last1=sanae.counter1;
+			last2=sanae.counter2;
+			sanae.sim(speed/30);
 		}
 		else {
 			flag++;
 		}
+		
+//		double mod=0;
+//		long stp=0;
+//		for(Entity e:sanae.entities) {
+//			mod=Math.max(mod,e.getAcceleration(e.getTime()).mod());
+//			if(e.getPos().mod()>400)continue;
+//			stp=Math.max(stp,e.getStep());
+//		}
+//		System.out.println(mod);
+//		System.out.println(stp);
 		
 		controller.update();
 		cam.update();
@@ -102,31 +137,37 @@ public class AstroSimulator extends ApplicationAdapter {
 
 		batch.begin(cam);
 		for (int i = 0; i < instances.size(); i++) {
-			Vector3 pos = sanae.entities.get(i).getPos().toGdx();
+			Vector3 pos = sanae.get(i).getPos().toGdx();
 			instances.get(i).transform.setTranslation(pos);
-			List<Vector3> qq = trace.get(i);
-			if (qq.size() <= 10) {
-				qq.add(pos);
-			} else if (qq.get(qq.size() - 1).dst(pos) > 100) {
-				qq.add(pos);
-			} else {
-				Vector3 v1 = qq.get(qq.size() - 1).cpy().sub(qq.get(qq.size() - 2).cpy());
-				v1 = v1.scl(1 / v1.len());
-				Vector3 v2 = pos.cpy().sub(qq.get(qq.size() - 1).cpy());
-				v2 = v2.scl(1 / v2.len());
-				if (v1.dot(v2) > -0.7) {
-					qq.add(pos);
+			if(i<2) {
+				List<Vector3> qq = trace.get(i);
+				if(qq.size()==0||qq.get(qq.size()-1).dst(pos)>0.05) {
+					if (qq.size() <= 100) {
+						qq.add(pos);
+					} else if (qq.get(qq.size() - 1).dst(pos) > 100) {
+						qq.add(pos);
+					} else {
+						Vector3 v1 = qq.get(qq.size() - 1).cpy().sub(qq.get(qq.size() - 2).cpy());
+						v1 = v1.scl(1 / v1.len());
+						Vector3 v2 = pos.cpy().sub(qq.get(qq.size() - 1).cpy());
+						v2 = v2.scl(1 / v2.len());
+						if (v1.dot(v2) > -0.9) {
+							qq.add(pos);
+						}
+					}
 				}
 			}
 			batch.render(instances.get(i), env);
 		}
 		batch.end();
 
-		for (int i = 0; i < trace.size(); i++) {
+		for (int m = 0; m < 2; m++) {
+			int i=(m*1)%trace.size();
+//			if(sanae.get(i).getPos().mod()>400)continue;
 			float ii = (float) i / trace.size();
 			shape.begin(ShapeRenderer.ShapeType.Line);
 			Color tmp = StyleUtil.colorize(ii);
-			tmp.a = 0.5f;
+			tmp.a = 0.1f;
 			shape.setColor(tmp);
 			Vector3 last = null;
 			for (int k = 0; k < trace.get(i).size(); k++) {
@@ -136,7 +177,7 @@ public class AstroSimulator extends ApplicationAdapter {
 				}
 				last = j;
 			}
-			shape.line(last, sanae.entities.get(i).getPos().toGdx());
+			shape.line(last, sanae.get(i).getPos().toGdx());
 			shape.end();
 		}
 	}
@@ -154,7 +195,7 @@ public class AstroSimulator extends ApplicationAdapter {
 	public void reloadCam() {
 		Vector3 oldPos=cam.position.cpy();
 		Vector3 oldDir=cam.direction.cpy();
-		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new PerspectiveCamera(70, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(oldPos);
 		cam.lookAt(oldPos.add(oldDir));
 		cam.near = 1f;
