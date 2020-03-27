@@ -41,7 +41,7 @@ public class AstroSimulator extends ApplicationAdapter {
 	public CameraInputController controller;
 	public Handler handler;
 	
-	public double speed=1;
+	public double speed=5000000;
 
 	private int flag=0;
 	
@@ -52,7 +52,7 @@ public class AstroSimulator extends ApplicationAdapter {
 		instances = new ArrayList<ModelInstance>();
 		trace = new ArrayList<ArrayList<Vector3>>();
 		shape = new ShapeRenderer();
-		sanae = new Sanae3d(8);
+		sanae = new Sanae3d(1);
 		env = new Environment();
 		env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
@@ -61,15 +61,15 @@ public class AstroSimulator extends ApplicationAdapter {
 		controller=new CameraInputController(cam);
 		input.addProcessor(controller);
 		Gdx.input.setInputProcessor(input);
-		cam.position.set(500f, 500f, 500f);
+		cam.position.set(0f, 200f, 0f);
 		cam.lookAt(0, 0, 0);
 		cam.near = 1f;
-		cam.far = 5000f;
+		cam.far = 10000f;
 		cam.update();
 		controller.translateUnits=10;
 		
 		ModelBuilder modelBuilder = new ModelBuilder();
-		int count = 2;
+//		int count = 2;
 //		sanae.add(new PointMass(1e12,Vec3.ZERO.clone(),new Vec3(0,0,0)));
 //		instances.add(new ModelInstance(modelBuilder.createSphere(2f, 2f, 2f, 20, 20,
 //				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
@@ -77,38 +77,70 @@ public class AstroSimulator extends ApplicationAdapter {
 		Model tmp=modelBuilder.createSphere(5f, 5f, 5f, 5, 5,
 				new Material(ColorAttribute.createDiffuse(Color.WHITE)),Usage.Position | Usage.Normal);
 //		trace.add(new ArrayList<Vector3>());
-		Vec3 tv=new Vec3(0,0,0);
-		for (int i = 0; i < count; i++) {
-			sanae.add(new PointMass(1e15,
-					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.5),
-					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.5)));
-			if(i!=count-1)tv.a(sanae.get(i).getVelocity(0).mul(sanae.get(i).getMass()));
-			instances.add(new ModelInstance(tmp));
-			trace.add(new ArrayList<Vector3>());
-		}
-		sanae.get(count-1).setVelocity(tv.mul(-1).div(sanae.get(count-1).getMass()));
-		int count2=5000;
-		for (int i = 0; i < count2; i++) {
-			sanae.add(new PointMass(1e5,
-					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.1),
-					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.1)));
-			instances.add(new ModelInstance(tmp));
-		}
+//		sanae.add(new PointMass(6e24,
+//				new Vec3(0,0,0),
+//				new Vec3(0,0,0)));
+//		sanae.add(new PointMass(1,
+//				new Vec3(6378000,0,0),
+//				new Vec3(0,0,7900)));
+		sanae.add(new PointMass(2e30,
+				new Vec3(0,0,0),
+				new Vec3(0,0,0)));
+		sanae.add(new PointMass(2e30,
+				new Vec3(1.5e11,0,0),
+				new Vec3(0,0,29800)));
+		sanae.add(new PointMass(2e30,
+				new Vec3(1.6e11,0,0),
+				new Vec3(0,0,-28000)));
+//		sanae.add(new PointMass(7.3e22,
+//				new Vec3(1.5e11+3.8e8,0,0),
+//				new Vec3(0,0,29800+1022)));
+//		sanae.add(new PointMass(1,
+//				new Vec3(1.5e11+1.5e9,0,0),
+//				new Vec3(0,0,29800+298)));
+//		sanae.add(new PointMass(1,
+//				new Vec3(7.5e10,0,-1.3e11),
+//				new Vec3(25807,0,14900)));
+		instances.add(new ModelInstance(tmp));
+		trace.add(new ArrayList<Vector3>());
+		instances.add(new ModelInstance(tmp));
+		trace.add(new ArrayList<Vector3>());
+		instances.add(new ModelInstance(tmp));
+		trace.add(new ArrayList<Vector3>());
+//		Vec3 tv=new Vec3(0,0,0);
+//		for (int i = 0; i < count; i++) { 
+//			sanae.add(new PointMass(1e15,
+//					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.5),
+//					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.5)));
+//			if(i!=count-1)tv.a(sanae.get(i).getVelocity(0).mul(sanae.get(i).getMass()));
+//			instances.add(new ModelInstance(tmp));
+//			trace.add(new ArrayList<Vector3>());
+//		}
+//		sanae.get(count-1).setVelocity(tv.mul(-1).div(sanae.get(count-1).getMass()));
+//		int count2=500;
+//		for (int i = 0; i < count2; i++) {
+//			sanae.add(new PointMass(1,
+//					new Vec3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100).mul(0.1),
+//					new Vec3(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50).mul(0.1)));
+//			instances.add(new ModelInstance(tmp));
+//		}
 	}
 
 	@Override
 	public void render() {
 		handler.handle();
 		if(flag>10) {
-//			System.out.println("Sent signal.");
-//			System.out.println("counter1="+sanae.counter1);
-//			System.out.println("counter2="+sanae.counter2);
+			System.out.println("Sent signal.");
+			System.out.println("t="+(double)sanae.time/1000/60/60/24/365);
+			System.out.println("counter1="+sanae.counter1);
+			System.out.println("counter2="+sanae.counter2);
 //			System.out.println(sanae.get(0).getPos());
-//			System.out.println("delta1="+(sanae.counter1-last1));
-//			System.out.println("delta2="+(sanae.counter2-last2));
-//			System.out.println("speed="+speed);
-//			System.out.println("time="+Gdx.graphics.getDeltaTime());
-//			System.out.println();
+			System.out.println("delta1="+(sanae.counter1-last1));
+			System.out.println("delta2="+(sanae.counter2-last2));
+			System.out.println("speed="+speed);
+			System.out.println("time="+Gdx.graphics.getDeltaTime());
+			System.out.println("step="+sanae.get(1).getStep());
+			System.out.println();
 			last1=sanae.counter1;
 			last2=sanae.counter2;
 			sanae.sim(speed/30);
@@ -128,6 +160,7 @@ public class AstroSimulator extends ApplicationAdapter {
 //		System.out.println(stp);
 		
 		controller.update();
+//		cam.position.set(sanae.get(1).getPos().mul(1e-9).add(new Vec3(0,10,0)).toGdx());
 		cam.update();
 		shape.setProjectionMatrix(cam.combined);
 
@@ -137,9 +170,10 @@ public class AstroSimulator extends ApplicationAdapter {
 
 		batch.begin(cam);
 		for (int i = 0; i < instances.size(); i++) {
-			Vector3 pos = sanae.get(i).getPos().toGdx();
+//			Vector3 pos = sanae.get(i).getPos().mul(1e-9).toGdx();
+			Vector3 pos = ((PointMass)sanae.get(i)).pos.clone().mul(1e-9).toGdx();
 			instances.get(i).transform.setTranslation(pos);
-			if(i<2) {
+			if(i<3) {
 				List<Vector3> qq = trace.get(i);
 				if(qq.size()==0||qq.get(qq.size()-1).dst(pos)>0.05) {
 					if (qq.size() <= 100) {
@@ -161,7 +195,7 @@ public class AstroSimulator extends ApplicationAdapter {
 		}
 		batch.end();
 
-		for (int m = 0; m < 2; m++) {
+		for (int m = 0; m < 3; m++) {
 			int i=(m*1)%trace.size();
 //			if(sanae.get(i).getPos().mod()>400)continue;
 			float ii = (float) i / trace.size();
@@ -177,7 +211,7 @@ public class AstroSimulator extends ApplicationAdapter {
 				}
 				last = j;
 			}
-			shape.line(last, sanae.get(i).getPos().toGdx());
+			shape.line(last, sanae.get(i).getPos().mul(1e-9).toGdx());
 			shape.end();
 		}
 	}

@@ -29,7 +29,7 @@ public class SimThread extends Thread {
 		while(true) {
 			busy=true;
 			while(time<goal) {
-				long minTime=time+1;
+				long minTime=Long.MAX_VALUE;
 				for(int i=id;i<sanae.size();i+=sanae.workerCount()) {
 					Entity me=sanae.get(i);
 					long time2=me.getTime();
