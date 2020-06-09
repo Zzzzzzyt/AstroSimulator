@@ -119,14 +119,14 @@ public class Vec3 {
 		 this.z=v.z;
 	 }
 	 
-	 public Vec3 a(Vec3 a) {
+	 public Vec3 addin(Vec3 a) {
 		 x+=a.x;
 		 y+=a.y;
 		 z+=a.z;
 		 return this;
 	 }
 	 
-	 public static Vec3 a(Vec3 a,Vec3 b) {
+	 public static Vec3 add(Vec3 a,Vec3 b) {
 		 return new Vec3(a.x+b.x,a.y+b.y,a.z+b.z);
 	 }
 	 
@@ -134,14 +134,14 @@ public class Vec3 {
 		 return new Vec3(x+a.x,y+a.y,z+a.z);
 	 }
 	 
-	 public Vec3 s(Vec3 a) {
+	 public Vec3 subin(Vec3 a) {
 		 x-=a.x;
 		 y-=a.y;
 		 z-=a.z;
 		 return this;
 	 }
 	 
-	 public static Vec3 s(Vec3 a,Vec3 b) {
+	 public static Vec3 sub(Vec3 a,Vec3 b) {
 		 return new Vec3(a.x-b.x,a.y-b.y,a.z-b.z);
 	 }
 	 
@@ -149,18 +149,18 @@ public class Vec3 {
 		 return new Vec3(x-a.x,y-a.y,z-a.z);
 	 }
 	 
-	 public Vec3 m(double a) {
+	 public Vec3 mulin(double a) {
 		 x*=a;
 		 y*=a;
 		 z*=a;
 		 return this;
 	 }
 	 
-	 public static Vec3 m(Vec3 a,double b) {
+	 public static Vec3 mul(Vec3 a,double b) {
 		 return new Vec3(a.x*b,a.y*b,a.z*b);
 	 }
 	 
-	 public static Vec3 m(double b,Vec3 a) {
+	 public static Vec3 mul(double b,Vec3 a) {
 		 return new Vec3(a.x*b,a.y*b,a.z*b);
 	 }
 	 
@@ -168,18 +168,14 @@ public class Vec3 {
 		 return new Vec3(x*a,y*a,z*a);
 	 }
 	 
-	 public Vec3 d(double a) {
+	 public Vec3 divin(double a) {
 		 x/=a;
 		 y/=a;
 		 z/=a;
 		 return this;
 	 }
 	 
-	 public static Vec3 d(Vec3 a,double b) {
-		 return new Vec3(a.x/b,a.y/b,a.z/b);
-	 }
-	 
-	 public static Vec3 d(double b,Vec3 a) {
+	 public static Vec3 div(Vec3 a,double b) {
 		 return new Vec3(a.x/b,a.y/b,a.z/b);
 	 }
 	 
@@ -193,6 +189,12 @@ public class Vec3 {
 	 
 	 public static double dot(Vec3 a,Vec3 b) {
 		 return a.x*b.x+a.y*b.y+a.z*b.z;
+	 }
+	 
+	 public void crsin(Vec3 a) {
+		 this.x=y*a.z-z*a.y;
+		 this.y=z*a.x-x*a.z;
+		 this.z=x*a.y-y*a.x;
 	 }
 	 
 	 public Vec3 crs(Vec3 a) {
@@ -251,6 +253,13 @@ public class Vec3 {
 		 double yy=a.y-b.y;
 		 double zz=a.z-b.z;
 		 return xx*xx+yy*yy+zz*zz;
+	 }
+	 
+	 public void unitfy() {
+		 double mod=Math.sqrt(x*x+y*y+z*z);
+		 this.x/=mod;
+		 this.y/=mod;
+		 this.z/=mod;
 	 }
 	 
 	 public Vec3 unit() {

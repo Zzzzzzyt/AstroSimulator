@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.backgroundFPS=60;
 		config.foregroundFPS=60;
+		config.vSyncEnabled=false;
 		config.title="Astro Simulator v0.0.0";
 		config.addIcon("aslogo128x.png", FileType.Internal);
 		config.addIcon("aslogo32x.png", FileType.Internal);

@@ -7,7 +7,7 @@ import com.zzzyt.sanae3d.entity.Entity;
 public class PhyUtil {
 	public static final double G=6.6743015e-11;
 	
-	public static double gravity(long t,Entity a,Entity b) {
+	public static double gravity(Entity b,Entity a,long t) {
 		return G*a.getMass()*b.getMass()/a.dst2(t,b);
 	}
 	
@@ -21,7 +21,6 @@ public class PhyUtil {
 	
 	public static long estimateStep(Vec3 a1,Vec3 a2) {
 		Vec3 a=a2.sub(a1);
-//		System.out.println(a.mod());
 		long step=Math.round(SanaeConfig.stepFactor/a.mod());
 		return MathUtils.clamp(step, SanaeConfig.leastStep, SanaeConfig.mostStep);
 	}

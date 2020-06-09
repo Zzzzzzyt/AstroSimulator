@@ -9,9 +9,7 @@ public class SimThread extends Thread {
 	private final Sanae3d sanae;
 	public long goal;
 	public long time;
-	private int lastsorted;
 	public boolean busy;
-	public boolean sort;
 	
 	public SimThread() {
 		this.sanae=Sanae3d.sanae;
@@ -32,27 +30,24 @@ public class SimThread extends Thread {
 				long minTime=Long.MAX_VALUE;
 				for(int i=id;i<sanae.size();i+=sanae.workerCount()) {
 					Entity me=sanae.get(i);
-					long time2=me.getTime();
+					long timeOld=me.getTime();
 					if(time>=me.getTime()+me.getStep()) {
-						Vec3 atmp=Vec3.ZERO.clone();
-						Vec3 vtmp=me.getVelocity(time2).clone();
-						Vec3 ptmp=me.getPos(time2).clone();
-						for(int j=0;j<SanaeConfig.mostCompSize&&j<me.getComputedList().size();j++) {
+						Vec3 atmp=new Vec3();
+						Vec3 vtmp=me.getVel(time).clone();
+						Vec3 ptmp=me.getPos(time).clone();
+						for(int j=0;j<sanae.size();j++) {
+							if(j==i)continue;
+							Entity e=sanae.get(j);
+							if(e.isTiny())continue;
 							sanae.counter1++;
-							Entity e=me.getComputedList().get(j);
-							Vec3 epos=e.getPos(time).clone();
-							double tmp=PhyUtil.gravity(me.getMass(),e.getMass(),ptmp,epos)/me.getMass();
-							if(j>=SanaeConfig.leastCompSize
-								&&tmp<SanaeConfig.ignoredAcceleration) {
-								break;
-							}
-							atmp.a(epos.sub(ptmp).setLen(tmp));
+							double tmp=PhyUtil.gravity(me,e,time)/me.getMass();
+							atmp.addin(Octree.dst(me, e,time).setLen(tmp));
 						}
-						ptmp.a(PhyUtil.posDelta(vtmp, atmp, (double)(time-time2)/1000d));
-						vtmp.a(atmp.mul((double)(time-time2)/1000d));
-						long mstep=PhyUtil.estimateStep(me.getAcceleration(me.getTime()), atmp);
-						me.setAcceleration(atmp);
-						me.setVelocity(vtmp);
+						ptmp.addin(PhyUtil.posDelta(vtmp, atmp, (double)(time-timeOld)/1000d));
+						vtmp.addin(atmp.mul((double)(time-timeOld)/1000d));
+						long mstep=PhyUtil.estimateStep(me.getAcc(me.getTime()), atmp);
+						me.setAcc(atmp);
+						me.setVel(vtmp);
 						me.setPos(ptmp);
 						me.setTime(time);
 						me.setStep(mstep);
@@ -62,19 +57,6 @@ public class SimThread extends Thread {
 				time=minTime;
 			}
 			busy=false;
-			if(sort) {
-				int cnt=Math.min((sanae.entities.size()-id)/sanae.workers.size(), SanaeConfig.sortSize);
-				for(int i=0;i<cnt;i++) {
-					if(sanae.entities.get(lastsorted).isTiny())continue;
-					sanae.counter2++;
-					sanae.entities.get(lastsorted).getComputedList().sort(time);
-					lastsorted+=sanae.workers.size();
-					if(lastsorted>=sanae.entities.size()) {
-						lastsorted=Math.min(sanae.entities.size()-1, id);
-					}
-				}
-			}
-			sort=false;
 //			System.out.println("[Thread "+id+"] Finished.");
 			try {
 				sleep(100);
