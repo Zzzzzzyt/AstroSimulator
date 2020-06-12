@@ -22,12 +22,10 @@ public class Octree {
 		root.size=Double.MAX_VALUE;
 		this.roots=new OctreeNode[8];
 		for(int i=0;i<8;i++) {
-			roots[i]=new OctreeNode();
-			roots[i].par=root;
-			roots[i].depth=1;
-			roots[i].pos=offset[i].clone().mul(-SanaeConfig.octreeDefaultSize).subin(new Vec3(1e11,1e11,1e11));
-			roots[i].size=SanaeConfig.octreeDefaultSize;
-			roots[i].absolutePos=roots[i].pos.clone();
+			this.roots[i]=new OctreeNode();
+			this.roots[i].par=root;
+			this.roots[i].pos=offset[i].clone().mul(-SanaeConfig.octreeDefaultSize);
+			this.roots[i].size=SanaeConfig.octreeDefaultSize;
 		}
 	}
 	
@@ -39,25 +37,24 @@ public class Octree {
 	}
 	
 	public static Vec3 dst(Entity a,Entity b,long t) {
-//		OctreeNode na=a.getNode();
-//		OctreeNode nb=b.getNode();
-//		Vec3 pa=a.getPos(t);
-//		Vec3 pb=b.getPos(t);
-//		while(na.depth<nb.depth) {
-//			pb.addin(nb.pos);
-//			nb=nb.par;
-//		}
-//		while(na.depth>nb.depth) {
-//			pa.addin(na.pos);
-//			na=na.par;
-//		}
-//		while(na!=nb) {
-//			pa.addin(na.pos);
-//			na=na.par;
-//			pb.addin(nb.pos);
-//			nb=nb.par;
-//		}
-//		return pa.sub(pb);
-		return a.getAbsolutePos(t).sub(b.getAbsolutePos());
+		OctreeNode na=a.getNode();
+		OctreeNode nb=b.getNode();
+		Vec3 pa=a.getPos(t);
+		Vec3 pb=b.getPos(t);
+		while(na.depth<nb.depth) {
+			pb.addin(nb.pos);
+			nb=nb.par;
+		}
+		while(na.depth>nb.depth) {
+			pa.addin(na.pos);
+			na=na.par;
+		}
+		while(na!=nb) {
+			pa.addin(na.pos);
+			na=na.par;
+			pb.addin(nb.pos);
+			nb=nb.par;
+		}
+		return pa.sub(pb);
 	}
 }

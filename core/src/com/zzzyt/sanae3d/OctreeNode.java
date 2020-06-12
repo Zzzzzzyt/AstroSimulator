@@ -72,7 +72,6 @@ public class OctreeNode {
 		if (!inside(e.getAbsolutePos())) {
 			return false;
 		}
-		e.setPos(e.getPos().subin(pos));
 		if (isLeaf) {
 			entity.add(e);
 			e.node=this;
@@ -93,6 +92,7 @@ public class OctreeNode {
 			ch[position] = new OctreeNode(this, position);
 			isLeaf=false;
 		}
+		e.setPos(e.getPos().sub(ch[position].pos));
 		return ch[position].add(e);
 	}
 
