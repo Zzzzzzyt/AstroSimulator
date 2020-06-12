@@ -41,7 +41,7 @@ public class AstroSimulator extends ApplicationAdapter {
 	public CameraInputController controller;
 	public Handler handler;
 	
-	public double speed=5000000;
+	public double speed=50000;
 
 	private int flag=0;
 	
@@ -83,14 +83,14 @@ public class AstroSimulator extends ApplicationAdapter {
 //		sanae.add(new PointMass(1,
 //				new Vec3(6378000,0,0),
 //				new Vec3(0,0,7900)));
-		sanae.add(new PointMass(2e30,
-				new Vec3(0,0,0),
-				new Vec3(0,0,0)));
-		sanae.add(new PointMass(2e30,
-				new Vec3(1.5e11,0,0),
-				new Vec3(0,0,29800)));
-		sanae.add(new PointMass(2e30,
-				new Vec3(1.6e11,0,0),
+		sanae.add(new PointMass(7e29,
+				new Vec3(0,1e10,0),
+				new Vec3(0,-10000,0)));
+		sanae.add(new PointMass(7e29,
+				new Vec3(0.5e11,0,0),
+				new Vec3(0,10000,28000)));
+		sanae.add(new PointMass(7e29,
+				new Vec3(1e11,-1e10,0),
 				new Vec3(0,0,-28000)));
 //		sanae.add(new PointMass(7.3e22,
 //				new Vec3(1.5e11+3.8e8,0,0),
@@ -171,7 +171,7 @@ public class AstroSimulator extends ApplicationAdapter {
 		batch.begin(cam);
 		for (int i = 0; i < instances.size(); i++) {
 //			Vector3 pos = sanae.get(i).getPos().mul(1e-9).toGdx();
-			Vector3 pos = ((PointMass)sanae.get(i)).pos.clone().mul(1e-9).toGdx();
+			Vector3 pos = sanae.get(i).getPos(sanae.workers.get(0).time).clone().mul(1e-9).toGdx();
 			instances.get(i).transform.setTranslation(pos);
 			if(i<3) {
 				List<Vector3> qq = trace.get(i);
@@ -211,7 +211,7 @@ public class AstroSimulator extends ApplicationAdapter {
 				}
 				last = j;
 			}
-			shape.line(last, sanae.get(i).getPos().mul(1e-9).toGdx());
+			shape.line(last, sanae.get(i).getPos(sanae.workers.get(0).time).mul(1e-9).toGdx());
 			shape.end();
 		}
 	}
