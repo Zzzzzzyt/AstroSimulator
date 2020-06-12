@@ -19,8 +19,8 @@ public class PhyUtil {
 		return v.mul(t).add(a.mul(t*t/2));
 	}
 	
-	public static long estimateStep(Vec3 a1,Vec3 a2) {
-		Vec3 a=a2.sub(a1);
+	public static long estimateStep(Vec3 a1,Vec3 a2,long dt) {
+		Vec3 a=a2.sub(a1).div(((double)dt)/1000d);
 		long step=Math.round(SanaeConfig.stepFactor/a.mod());
 		return MathUtils.clamp(step, SanaeConfig.leastStep, SanaeConfig.mostStep);
 	}

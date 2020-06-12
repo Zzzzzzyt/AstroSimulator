@@ -33,19 +33,19 @@ public class SimThread extends Thread {
 					long timeOld=me.getTime();
 					if(time>=me.getTime()+me.getStep()) {
 						Vec3 atmp=new Vec3();
-						Vec3 vtmp=me.getVel(time).clone();
-						Vec3 ptmp=me.getPos(time).clone();
+						Vec3 vtmp=me.getVel(timeOld).clone();
+						Vec3 ptmp=me.getPos(timeOld).clone();
 						for(int j=0;j<sanae.size();j++) {
 							if(j==i)continue;
 							Entity e=sanae.get(j);
 							if(e.isTiny())continue;
 							sanae.counter1++;
 							double tmp=PhyUtil.gravity(me,e,time)/me.getMass();
-							atmp.addin(Octree.dst(me, e,time).setLen(tmp));
+							atmp.addin(Octree.dst(e,me,time).setLen(tmp));
 						}
 						ptmp.addin(PhyUtil.posDelta(vtmp, atmp, (double)(time-timeOld)/1000d));
 						vtmp.addin(atmp.mul((double)(time-timeOld)/1000d));
-						long mstep=PhyUtil.estimateStep(me.getAcc(me.getTime()), atmp);
+						long mstep=PhyUtil.estimateStep(me.getAcc(me.getTime()), atmp,time-timeOld);
 						me.setAcc(atmp);
 						me.setVel(vtmp);
 						me.setPos(ptmp);

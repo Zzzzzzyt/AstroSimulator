@@ -53,11 +53,11 @@ public abstract class Entity {
 	}
 	
 	public double dst(long t,Entity e) {
-		return Math.sqrt(Octree.dst(this, e, t).mod());
+		return Octree.dst(this, e, t).mod();
 	}
 	
 	public double dst2(long t,Entity e) {
-		return Octree.dst(this, e, t).mod();
+		return Octree.dst(this, e, t).mod2();
 	}
 	
 	public abstract double getMass();

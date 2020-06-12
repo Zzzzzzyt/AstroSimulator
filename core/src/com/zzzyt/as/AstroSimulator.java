@@ -48,7 +48,7 @@ public class AstroSimulator extends ApplicationAdapter {
 	public SpriteBatch overlay;
 	public WindowedMean fpsCounter;
 	
-	public double speed=50000;
+	public double speed=100000;
 
 	private int flag=0;
 	
@@ -87,9 +87,11 @@ public class AstroSimulator extends ApplicationAdapter {
 		sanae.add(new PointMass(7e29,
 				new Vec3(0,1e10,0),
 				new Vec3(0,-10000,0)));
+
 		sanae.add(new PointMass(7e29,
 				new Vec3(0.5e11,0,0),
 				new Vec3(0,10000,28000)));
+
 		sanae.add(new PointMass(7e29,
 				new Vec3(1e11,-1e10,0),
 				new Vec3(0,0,-28000)));
@@ -104,7 +106,7 @@ public class AstroSimulator extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-//		handler.handle();
+		handler.handle();
 		if(flag>10) {
 			System.out.println("Sent signal.");
 			System.out.println("t="+(double)sanae.time/1000/60/60/24/365);
@@ -113,6 +115,7 @@ public class AstroSimulator extends ApplicationAdapter {
 			System.out.println("speed="+speed);
 			System.out.println("time="+Gdx.graphics.getDeltaTime());
 			System.out.println("step="+sanae.get(0).getStep());
+			System.out.println("acc="+sanae.get(0).getAcc(0));
 			System.out.println();
 			sanae.sim(speed/30);
 		}
@@ -130,7 +133,7 @@ public class AstroSimulator extends ApplicationAdapter {
 
 		batch.begin(cam);
 		for (int i = 0; i < instances.size(); i++) {
-			Vector3 pos = ((PointMass)sanae.get(i)).pos.clone().mul(1e-9).toGdx();
+			Vector3 pos = ((PointMass)sanae.get(i)).getAbsolutePos(sanae.get(i).getTime()).mul(1e-9).toGdx();
 			instances.get(i).transform.setTranslation(pos);
 			if(i<3) {
 				List<Vector3> qq = trace.get(i);
@@ -169,9 +172,13 @@ public class AstroSimulator extends ApplicationAdapter {
 				}
 				last = j;
 			}
-			shape.line(last, sanae.get(i).getPos(sanae.workers.get(0).time).mul(1e-9).toGdx());
+			shape.line(last, sanae.get(i).getAbsolutePos(sanae.get(i).getTime()).mul(1e-9).toGdx());
 			shape.end();
 		}
+		
+		shape.begin(ShapeRenderer.ShapeType.Line);
+		drawCube(shape,sanae.octree.roots[0].absolutePos,sanae.octree.roots[0].size);
+		shape.end();
 		
 		fpsCounter.addValue((float)(1/Gdx.graphics.getDeltaTime()));
 		overlay.begin();
@@ -212,5 +219,11 @@ public class AstroSimulator extends ApplicationAdapter {
 	public AstroSimulator() {
 		as = this;
 		input=new InputMultiplexer();
+	}
+	
+	public void drawCube(ShapeRenderer shape,Vec3 pos,double size) {
+		pos.mul(1e-9);
+		size*=1e-9;
+		shape.box((float)pos.x,(float) pos.y, (float)pos.z, (float)size,(float)size,-(float)size);
 	}
 }

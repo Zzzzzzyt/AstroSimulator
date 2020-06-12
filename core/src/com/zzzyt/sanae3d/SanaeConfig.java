@@ -6,5 +6,5 @@ public class SanaeConfig {
 	public static final long leastStep=1;
 	public static final long mostStep=50000;
 	public static final double stepFactor=0.003;
-	public static final double octreeDefaultSize=34359738368d;
+	public static final double octreeDefaultSize=549755813888d;
 }
