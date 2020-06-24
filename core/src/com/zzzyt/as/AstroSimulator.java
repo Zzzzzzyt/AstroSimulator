@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.zzzyt.as.input.Handler;
 import com.zzzyt.as.util.StyleUtil;
 import com.zzzyt.sanae3d.Sanae3d;
-import com.zzzyt.sanae3d.entity.Entity;
 import com.zzzyt.sanae3d.entity.PointMass;
 import com.zzzyt.sanae3d.math.Vec3;
 
